@@ -35,6 +35,14 @@
       }
     },
     {
+      "id": "clock",
+      "module": "cascade.core.Time",
+      "position": [
+        160,
+        380
+      ]
+    },
+    {
       "id": "sim",
       "module": "cascade.pop.Simulate",
       "position": [
@@ -124,6 +132,18 @@
     }
   ],
   "connections": [
+    [
+      [
+        "clock",
+        0,
+        "frame"
+      ],
+      [
+        "sim",
+        0,
+        "frame"
+      ]
+    ],
     [
       [
         "field",
