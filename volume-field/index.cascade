@@ -1,0 +1,80 @@
+{
+  "version": "0.2",
+  "metadata": {
+    "name": "volume-field"
+  },
+  "nodes": [
+    {
+      "id": "field",
+      "module": "project.field-columns",
+      "source": "project",
+      "position": [
+        80,
+        200
+      ],
+      "props": {
+        "size": [
+          28,
+          10
+        ],
+        "hue_span": 0.2,
+        "slice_shift": 0.05,
+        "saturation": 0.5,
+        "value": [
+          0.02,
+          0.95
+        ],
+        "banding": 0.6,
+        "seed": 7
+      }
+    },
+    {
+      "id": "volume",
+      "module": "project.volume-render",
+      "source": "project",
+      "position": [
+        420,
+        200
+      ],
+      "props": {
+        "resolution": [
+          900,
+          900
+        ],
+        "steps": 128,
+        "container": "sphere",
+        "camera": [
+          0.62,
+          0.14,
+          1.9
+        ]
+      }
+    }
+  ],
+  "connections": [
+    [
+      [
+        "field",
+        0,
+        "image"
+      ],
+      [
+        "volume",
+        0,
+        "column"
+      ]
+    ],
+    [
+      [
+        "field",
+        0,
+        "mean_hue"
+      ],
+      [
+        "volume",
+        0,
+        "mean_hue"
+      ]
+    ]
+  ]
+}

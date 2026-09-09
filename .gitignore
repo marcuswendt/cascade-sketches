@@ -1,0 +1,5 @@
+node_modules/
+.cascade-cache/
+renders/
+*.log
+.DS_Store
