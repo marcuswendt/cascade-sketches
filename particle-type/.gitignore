@@ -1,0 +1,7 @@
+
+# Scratch graphs the sequence tool writes per frame.
+.frame.cascade
+.net.cascade
+.mono.cascade
+.bench.cascade
+.f.cascade
