@@ -74,7 +74,7 @@ fn grade(c : vec3<f32>) -> vec3<f32> {
   return hsv2rgb(h);
 }
 
-// the moment's colour column. y01: 0 top -> 1 bottom. slice: 0..1 through its slices.
+// the colour column. y01: 0 top -> 1 bottom. slice: 0..1 through its slices.
 fn column_at(y01 : f32, slice : f32) -> vec3<f32> {
   let c = textureSampleLevel(col_tex, col_smp, vec2<f32>(slice, clamp(y01, 0.0, 1.0)), 0.0);
   return grade(c.rgb);
@@ -197,7 +197,7 @@ fn fs(@builtin(position) frag : vec4<f32>) -> @location(0) vec4<f32> {
     for (var i = 0; i < steps; i = i + 1) {
       let p = ro + rd * t;
       let L = cy_local(p);
-      // the moment's timeline held as the body's depth; live time streams it
+      // the field's own axis held as the body's depth; live time streams it
       // slowly through, so the crystal is never quite the same block twice.
       let tf = fract(L.y * U.cy_a.y + time * U.cy_a.z);
       // L.x counts up from the floor; the column's y01 counts down from the top.
