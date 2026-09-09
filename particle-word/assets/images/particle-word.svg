@@ -1,5 +1,5 @@
-<svg xmlns="http://www.w3.org/2000/svg" width="1" height="1" viewBox="0 -1 1 1">
+<svg xmlns="http://www.w3.org/2000/svg" width="1920" height="1080" viewBox="0 -1 1 1">
   <!-- Geometry is +Y up; SVG is +Y down. This is the one flip. -->
-  <g transform="scale(1,-1)" fill="none" stroke="#e8e3db" stroke-width="0.9" opacity="0.75">
+  <g transform="scale(1,-1)" fill="none" stroke="#e8e3db" stroke-width="1.15" opacity="0.9">
   </g>
 </svg>
