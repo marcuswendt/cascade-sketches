@@ -7,21 +7,34 @@ A word made of particle trails. Houdini's POP model, in six nodes.
 ## What it does
 
 ```
-word-points ─┬→ pop.Simulate ──→ geo.SvgExport ──→ core.Output
-             └────┘  (attract)
+word-field → pop.Simulate → geo.SvgExport → core.Output
 ```
 
-**`word-points`** renders the word to an offscreen canvas at the sampling resolution, thresholds the pixels, and emits one point per bright cell. That is where all the sketch's specificity lives: the font, the threshold, the grid.
+**`word-field`** renders the word to an offscreen canvas, **blurs it**, takes the gradient of the blurred image, and emits one point per cell carrying that gradient as `N`. The blur is the whole trick and it is worth understanding before turning anything: a hard letterform's gradient points at the nearest *edge*, so pulling up it pins particles to outlines. Blurred, each stroke becomes a ridge whose peak runs down its middle — so the gradient points at the **spine**, and its perpendicular runs **along** the outline.
 
-**`cascade.pop.Simulate`** births particles on those points, pushes them with a noise field, pulls them back toward the same points, and keeps them apart. It outputs both the particles and their **trails**, one open polyline per particle.
+**`cascade.pop.Simulate`** scatters particles in the area *around* the type, then drags them with two halves of that one field: `field_normal` pulls up the gradient toward the spine, `field_tangential` pushes along the perpendicular. Balance the two and the word forms out of curling strokes; take either away and you get a clump or a drift. It outputs the particles and their **trails**, one open polyline each.
 
-**`cascade.geo.SvgExport`** writes the trails as an SVG. The whole picture is 2,160 short strokes.
+**`cascade.geo.SvgExport`** writes the trails. About 2,500 short strokes.
 
-## The interesting part: where the split falls
+### The two numbers that matter
 
-`Simulate` knows nothing about type. `word-points` knows nothing about particles. The wire between them carries plain `geometry`, and that is what makes each half reusable — point a photograph's bright pixels at the same input and the same simulation draws the photograph.
+`field_normal` against `field_tangential` is the balance, and it is delicate in both directions:
 
-That split was a correction. The first version gave `Simulate` an `image` input, because the piece this is modelled on renders its word to a canvas, blurs it, and reads a gradient field back. It was wrong for a *core* node: decoding an image needs a capability, the media capability returns a host-specific lease rather than a portable raster, and a POP node doing IO stops being the pure arithmetic that lets it cook identically in a browser and under the CLI. So the rasterising moved upstream, into a project node, where a sketch's knowledge belongs.
+| | |
+| --- | --- |
+| tangential ≫ normal | vortices. Beautiful, and the word is gone |
+| normal ≫ tangential | particles collapse onto the spine as points with radial spokes |
+| roughly 3:2 | the word forms out of curling strokes |
+
+`blur` interacts with it more than it looks. Too much and each letter merges into one blob whose ridge is a single peak, so the spine collapses to a point — which reads as the *forces* being wrong when it is the field. At this grid, 3 keeps each stroke its own ridge.
+
+**Particles spawn in `birth_area`, around the type rather than on it.** Birthing them on the letterforms puts every particle where it is already going, so nothing travels and the field has nothing to reveal.
+
+## Why the field is geometry and not an image
+
+The effect this rebuilds reads a raster, so an `image` input was the obvious design and it was wrong for a *core* node: decoding an image needs a capability, the media capability returns a host-specific lease rather than a portable raster, and a POP node doing IO stops being the pure arithmetic that lets it cook identically in a browser and under the CLI.
+
+So the rasterising stays in `word-field`, where a sketch's knowledge of type belongs, and what crosses the wire is points carrying `N` — a vector field in Cascade's existing vocabulary. Point anything else that can emit a gradient at the same input and the same simulation draws it.
 
 ## Things this sketch demonstrates
 
@@ -44,4 +57,4 @@ npm run check:graph
 
 ## Turning it
 
-`text` on `word-points` is an input, so it can be driven; change it and the whole picture re-forms around the new word. On `Simulate`, `attract_amplitude` against `noise_amplitude` is the balance that decides whether the word is legible or a storm — at `noise 26` and `attract 2600` it reads clearly; drop the attraction by half and it dissolves. `trail_length` is how much of each particle's history is drawn.
+`text` on `word-field` is an input, so it can be driven; change it and the whole picture re-forms around the new word. `trail_length` is how much of each particle's history is drawn. `noise_amplitude` is there to keep the flow from being too orderly and wants to stay small — above about 20 it competes with the field rather than roughening it.

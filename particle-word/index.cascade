@@ -5,12 +5,12 @@
   },
   "nodes": [
     {
-      "id": "word",
-      "module": "project.word-points",
+      "id": "field",
+      "module": "project.word-field",
       "source": "project",
       "position": [
         60,
-        340
+        240
       ],
       "inputs": [
         {
@@ -25,10 +25,11 @@
           260
         ],
         "resolution": [
-          220,
-          74
+          300,
+          96
         ],
-        "threshold": 0.45,
+        "blur": 3,
+        "threshold": 0.004,
         "weight": "700",
         "tracking": 0.02
       }
@@ -37,30 +38,37 @@
       "id": "sim",
       "module": "cascade.pop.Simulate",
       "position": [
-        380,
-        220
+        400,
+        240
       ],
       "inputs": [
         {
           "name": "frame",
-          "defaultValue": 110,
+          "defaultValue": 120,
           "dataType": "float"
         }
       ],
       "props": {
-        "impulse": 90,
-        "life": 1.1,
-        "lifevar": 0.6,
-        "airresist": 3.0,
-        "maxspeed": 80,
-        "noise_amplitude": 26,
-        "noise_frequency": 0.06,
-        "noise_evolve": 0.2,
-        "attract_amplitude": 2600,
-        "attract_radius": 38,
-        "separate_radius": 4,
-        "separate_strength": 10,
-        "trail_length": 9,
+        "birth_area": [
+          -470,
+          -190,
+          470,
+          190
+        ],
+        "impulse": 45,
+        "life": 2.6,
+        "lifevar": 0.5,
+        "airresist": 1.8,
+        "maxspeed": 95,
+        "field_normal": 1500,
+        "field_tangential": 1100,
+        "field_radius": 14,
+        "noise_amplitude": 10,
+        "noise_frequency": 0.02,
+        "noise_evolve": 0.1,
+        "attract_amplitude": 0,
+        "separate_radius": 0,
+        "trail_length": 12,
         "trail_increment": 1,
         "timestep": 0.041666666666666664,
         "seed": 11
@@ -70,31 +78,31 @@
       "id": "ink",
       "module": "cascade.geo.SvgExport",
       "position": [
-        700,
-        220
+        720,
+        240
       ],
       "props": {
         "filename": "particle-word.svg",
         "width": 0,
         "height": 0,
-        "margin": 70,
+        "margin": 60,
         "stroke": [
           0.91,
           0.89,
           0.86,
           1
         ],
-        "strokeWidth": 1.0,
+        "strokeWidth": 0.9,
         "fillMode": "none",
-        "opacity": 0.8
+        "opacity": 0.75
       }
     },
     {
       "id": "out",
       "module": "cascade.core.Output",
       "position": [
-        960,
-        220
+        980,
+        240
       ],
       "props": {
         "outputName": "svg"
@@ -104,26 +112,14 @@
   "connections": [
     [
       [
-        "word",
+        "field",
         0,
         "geometry"
       ],
       [
         "sim",
         0,
-        "geometry"
-      ]
-    ],
-    [
-      [
-        "word",
-        0,
-        "geometry"
-      ],
-      [
-        "sim",
-        0,
-        "attract"
+        "field"
       ]
     ],
     [
