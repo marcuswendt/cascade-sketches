@@ -1,0 +1,15 @@
+{
+  "name": "particle-word",
+  "private": true,
+  "type": "module",
+  "devDependencies": {
+    "cascade": "file:../../cascade",
+    "typescript": "^6.0.0"
+  },
+  "scripts": {
+    "check": "tsc --noEmit",
+    "check:graph": "cascade check index.cascade",
+    "studio": "cascade .",
+    "run": "cascade run index.cascade --frames 1 --out renders/still"
+  }
+}

@@ -1,0 +1,154 @@
+{
+  "version": "0.2",
+  "metadata": {
+    "name": "particle-word"
+  },
+  "nodes": [
+    {
+      "id": "word",
+      "module": "project.word-points",
+      "source": "project",
+      "position": [
+        60,
+        340
+      ],
+      "inputs": [
+        {
+          "name": "text",
+          "defaultValue": "Cascade",
+          "dataType": "string"
+        }
+      ],
+      "props": {
+        "size": [
+          820,
+          260
+        ],
+        "resolution": [
+          220,
+          74
+        ],
+        "threshold": 0.45,
+        "weight": "700",
+        "tracking": 0.02
+      }
+    },
+    {
+      "id": "sim",
+      "module": "cascade.pop.Simulate",
+      "position": [
+        380,
+        220
+      ],
+      "inputs": [
+        {
+          "name": "frame",
+          "defaultValue": 110,
+          "dataType": "float"
+        }
+      ],
+      "props": {
+        "impulse": 90,
+        "life": 1.1,
+        "lifevar": 0.6,
+        "airresist": 3.0,
+        "maxspeed": 80,
+        "noise_amplitude": 26,
+        "noise_frequency": 0.06,
+        "noise_evolve": 0.2,
+        "attract_amplitude": 2600,
+        "attract_radius": 38,
+        "separate_radius": 4,
+        "separate_strength": 10,
+        "trail_length": 9,
+        "trail_increment": 1,
+        "timestep": 0.041666666666666664,
+        "seed": 11
+      }
+    },
+    {
+      "id": "ink",
+      "module": "cascade.geo.SvgExport",
+      "position": [
+        700,
+        220
+      ],
+      "props": {
+        "filename": "particle-word.svg",
+        "width": 0,
+        "height": 0,
+        "margin": 70,
+        "stroke": [
+          0.91,
+          0.89,
+          0.86,
+          1
+        ],
+        "strokeWidth": 1.0,
+        "fillMode": "none",
+        "opacity": 0.8
+      }
+    },
+    {
+      "id": "out",
+      "module": "cascade.core.Output",
+      "position": [
+        960,
+        220
+      ],
+      "props": {
+        "outputName": "svg"
+      }
+    }
+  ],
+  "connections": [
+    [
+      [
+        "word",
+        0,
+        "geometry"
+      ],
+      [
+        "sim",
+        0,
+        "geometry"
+      ]
+    ],
+    [
+      [
+        "word",
+        0,
+        "geometry"
+      ],
+      [
+        "sim",
+        0,
+        "attract"
+      ]
+    ],
+    [
+      [
+        "sim",
+        0,
+        "trails"
+      ],
+      [
+        "ink",
+        0,
+        "geometry"
+      ]
+    ],
+    [
+      [
+        "ink",
+        0,
+        "svg"
+      ],
+      [
+        "out",
+        0,
+        "input"
+      ]
+    ]
+  ]
+}
