@@ -9,3 +9,5 @@ renders/
 # whole point of the graph being here.
 assets/images/
 **/assets/images/
+renders/
+**/renders/
