@@ -1,5 +1,5 @@
 {
-  "name": "particle-word",
+  "name": "particle-type",
   "private": true,
   "type": "module",
   "devDependencies": {

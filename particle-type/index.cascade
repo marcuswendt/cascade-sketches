@@ -1,7 +1,7 @@
 {
   "version": "0.2",
   "metadata": {
-    "name": "particle-word"
+    "name": "particle-type"
   },
   "nodes": [
     {
@@ -90,7 +90,7 @@
         240
       ],
       "props": {
-        "filename": "particle-word.svg",
+        "filename": "particle-type.svg",
         "width": 1920,
         "height": 1080,
         "margin": 90,

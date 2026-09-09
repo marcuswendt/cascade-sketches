@@ -1,4 +1,4 @@
-# particle-word
+# particle-type
 
 A word made of particle trails. Houdini's POP model, in six nodes.
 
