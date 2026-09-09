@@ -11,6 +11,8 @@ Cascade's own repository documents the API. This one answers the question the do
 | | |
 | --- | --- |
 | [`volume-field`](volume-field/) | A colour field raymarched on the GPU. WebGPU, one portable node, procedural input. |
+| [`particle-word`](particle-word/) | A word made of particle trails. Houdini's POP model, six nodes, geometry rather than a faded canvas. |
+| [`field-logo`](field-logo/) | A logo rebuilt as one eccentric radial gradient, evaluated at three sizes. Canvas 2D, browser-only nodes, nine measured numbers and no asset. |
 
 ## Running one
 
