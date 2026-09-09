@@ -43,7 +43,8 @@ export const definition = {
      */
     blur: { type: 'int', default: 5, min: 0, max: 40 },
     /** Cells whose gradient is weaker than this are dropped, so the field is
-     *  points near the word rather than a full grid of mostly-nothing. */
+     *  points near the word rather than a full grid of mostly-nothing. Lower it
+     *  to reach further out from the type, which is what a bundle needs. */
     threshold: { type: 'float', default: 0.008, min: 0, max: 1, step: 0.001 },
     weight: {
       type: 'string',
@@ -143,6 +144,9 @@ export async function execute(context: NodeExecutionContext<typeof definition>) 
   const field = blurred(luminance, columns, rows, blur);
   const builder = new GeometryBuilder({ positionSize: 2 });
   const normals: number[] = [];
+  // The field's value as well as its direction, so a force can hold a level
+  // rather than only climb. A bundle is a contour, and a contour is a level.
+  const levels: number[] = [];
 
   const sample = (column: number, row: number): number =>
     field[
@@ -167,11 +171,13 @@ export async function execute(context: NodeExecutionContext<typeof definition>) 
       // Normalised: the force's own amplitude decides strength, so a field
       // carrying magnitude as well would give two places to tune one thing.
       normals.push(dx / magnitude, dy / magnitude);
+      levels.push(sample(column, row));
     }
   }
 
   if (normals.length > 0) {
     builder.setNumericAttribute('point', 'N', Float32Array.from(normals), 2, 'f32');
+    builder.setNumericAttribute('point', 'level', Float32Array.from(levels), 1, 'f32');
   }
   context.outputs.geometry.set(builder.build());
 }

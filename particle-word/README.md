@@ -16,17 +16,26 @@ word-field → pop.Simulate → geo.SvgExport → core.Output
 
 **`cascade.geo.SvgExport`** writes the trails. About 2,500 short strokes.
 
-### The two numbers that matter
+### Getting calligraphy rather than hairballs
 
-`field_normal` against `field_tangential` is the balance, and it is delicate in both directions:
+Marcus, arriving at what the effect actually is: *"the lines flow tangentially around the letters in a bundle … loosely describing the type"*, and then *"we want the lines to extend and really flow around the letters, creating an elegant calligraphy… not hairballs or knots."*
+
+Three settings do almost all of that, and the reasoning behind each is more useful than its value:
+
+**A bundle is a contour, and a contour is a level set.** So the way to get one is *not* to pull particles toward the spine — that collapses each letter onto a point with radial spokes. `field_normal` is **0**, and `field_hold` keeps each particle at the `field_level` it started near while `field_tangential` carries it round. Pure tangential flow with no hold also fails, differently: every particle converges onto one level set, and the whole word came out as a single line along its baseline.
+
+**Long lines need few particles, not more.** `impulse` 3 a frame with a 30 second life and a 140 frame trail gives a few hundred long strokes. The instinct is to raise the particle count; that gives many short strokes, which is exactly the hairball. Fewer and longer is the whole difference between this and a mess.
+
+**Nothing should fight the field.** `noise_amplitude` 0, `separate_radius` 0, and drag at 0.12 — low enough that a particle keeps its momentum right around a letter. Every one of those was non-zero in earlier attempts and each added a knot.
 
 | | |
 | --- | --- |
-| tangential ≫ normal | vortices. Beautiful, and the word is gone |
-| normal ≫ tangential | particles collapse onto the spine as points with radial spokes |
-| roughly 3:2 | the word forms out of curling strokes |
+| tangential ≫ hold | vortices. Beautiful, and the word is gone |
+| hold ≫ tangential | particles sit on the contour and stop travelling |
+| high impulse, short trails | hairballs |
+| noise or separation above zero | knots where lines should be smooth |
 
-`blur` interacts with it more than it looks. Too much and each letter merges into one blob whose ridge is a single peak, so the spine collapses to a point — which reads as the *forces* being wrong when it is the field. At this grid, 3 keeps each stroke its own ridge.
+`blur` interacts with all of it more than it looks. Too much and each letter merges into one blob whose ridge is a single peak, so the spine collapses to a point — which reads as the *forces* being wrong when it is the field.
 
 **Particles spawn in `birth_area`, around the type rather than on it.** Birthing them on the letterforms puts every particle where it is already going, so nothing travels and the field has nothing to reveal.
 
