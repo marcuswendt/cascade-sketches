@@ -80,3 +80,35 @@ npm run check:graph
 ## Turning it
 
 `text` on `word-field` is an input, so it can be driven; change it and the whole picture re-forms around the new word. `trail_length` is how much of each particle's history is drawn. `noise_amplitude` is there to keep the flow from being too orderly and wants to stay small — above about 20 it competes with the field rather than roughening it.
+
+## Two graphs, and why both
+
+`index.cascade` uses **`cascade.pop.Simulate`** — one node with thirteen force parameters on it. It is the fast way to get this picture and the one to copy if you want the effect rather than the workings.
+
+`network.cascade` is the same piece built as **a network you can dive into**. Marcus asked for it on 2026-09-09: *"how do i jump into the sim node and see its network of forces."* You could not, because a subnet in Cascade was a grouping whose children cook once, so a per-step force chain had nowhere to live. `cascade.core.Feedback` is that place.
+
+```
+field ──────────────┬──────────────────────────┐
+                    │                          │
+clock ($F) ── steps │                          │
+                    ▼                          │
+              ┌── loop (Feedback) ────────┐    │
+              │  prev (Previous)          │    │
+              │    └─ birth (Source) ◄────┼────┘   field, per step
+              │         └─ flow (FieldForce)
+              │              └─ solve (Solver)
+              │                   └─ step (Output)
+              └───────────────────────────┘
+                    │ result        │ history
+                    └──── trail (Trail) ── ink (SvgExport) ── out
+```
+
+Three things about it are worth knowing before you edit it.
+
+**Birth is inside the loop.** `Simulate`'s `impulse` is a birth rate per frame, so a `Source` placed outside the container fires once and the piece has three particles rather than three per frame. That was the first version and it rendered three strokes.
+
+**Forces accumulate; the solver integrates once.** `FieldForce` adds to a `force` attribute and moves nothing. Chain two force nodes that each integrated and time would advance twice per step — the particles travel further than the timestep says and reordering nodes changes the result, with nothing reporting anything.
+
+**The trail reads the container's `history`, not its result.** A trail needs the frames, and a node downstream of a simulation sees one, which draws nothing. `history` is capped by the container's History prop — 140 here, matching the old `trail_length`.
+
+Measured at frame 60: both graphs emit **177 paths**, 103 KB against 100 KB of SVG, in the same cook time. The small difference is that `Simulate` scatters birth positions across an area and assigns a birth colour, while the network births on the field's own points and has no colour node yet.

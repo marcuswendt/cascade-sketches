@@ -1,0 +1,296 @@
+{
+  "version": "0.2",
+  "nodes": [
+    {
+      "id": "field",
+      "module": "project.word-field",
+      "position": [
+        80,
+        120
+      ],
+      "props": {
+        "size": [
+          820,
+          260
+        ],
+        "resolution": [
+          300,
+          96
+        ],
+        "blur": 4,
+        "threshold": 0.0015,
+        "weight": "700",
+        "tracking": 0.02
+      }
+    },
+    {
+      "id": "clock",
+      "module": "cascade.core.Time",
+      "position": [
+        80,
+        420
+      ]
+    },
+    {
+      "id": "loop",
+      "module": "cascade.core.Feedback",
+      "position": [
+        600,
+        240
+      ],
+      "props": {
+        "history": 140
+      }
+    },
+    {
+      "id": "prev",
+      "module": "cascade.core.Previous",
+      "parent": "loop",
+      "position": [
+        80,
+        20
+      ]
+    },
+    {
+      "id": "birth",
+      "module": "cascade.pop.Source",
+      "position": [
+        80,
+        160
+      ],
+      "props": {
+        "impulse": 3,
+        "life": 30,
+        "lifevar": 0.15,
+        "seed": 11
+      },
+      "parent": "loop"
+    },
+    {
+      "id": "flow",
+      "module": "cascade.pop.FieldForce",
+      "parent": "loop",
+      "position": [
+        80,
+        320
+      ],
+      "props": {
+        "normal": 0,
+        "tangential": 2600,
+        "radius": 20,
+        "level": 0.28,
+        "hold": 5200
+      }
+    },
+    {
+      "id": "solve",
+      "module": "cascade.pop.Solver",
+      "parent": "loop",
+      "position": [
+        80,
+        470
+      ],
+      "props": {
+        "timestep": 0.041666666666666664,
+        "airresist": 0.12,
+        "maxspeed": 170
+      }
+    },
+    {
+      "id": "step",
+      "module": "cascade.core.Output",
+      "parent": "loop",
+      "position": [
+        80,
+        620
+      ],
+      "props": {
+        "outputIndex": 0
+      }
+    },
+    {
+      "id": "trail",
+      "module": "cascade.pop.Trail",
+      "position": [
+        880,
+        240
+      ],
+      "props": {
+        "result": "polylines",
+        "length": 140,
+        "increment": 1
+      }
+    },
+    {
+      "id": "ink",
+      "module": "cascade.geo.SvgExport",
+      "position": [
+        1140,
+        240
+      ],
+      "props": {
+        "filename": "particle-type.svg",
+        "width": 1920,
+        "height": 1080,
+        "margin": 90,
+        "stroke": [
+          0.91,
+          0.89,
+          0.86,
+          1
+        ],
+        "strokeWidth": 1.15,
+        "fillMode": "none",
+        "opacity": 0.9,
+        "background": [
+          0.043,
+          0.051,
+          0.071,
+          1
+        ]
+      }
+    },
+    {
+      "id": "out",
+      "module": "cascade.core.Output",
+      "position": [
+        1380,
+        240
+      ]
+    }
+  ],
+  "connections": [
+    [
+      [
+        "field",
+        0,
+        "geometry"
+      ],
+      [
+        "birth",
+        0,
+        "geometry"
+      ]
+    ],
+    [
+      [
+        "prev",
+        0,
+        "value"
+      ],
+      [
+        "birth",
+        1,
+        "particles"
+      ]
+    ],
+    [
+      [
+        "clock",
+        0,
+        "frame"
+      ],
+      [
+        "loop",
+        1,
+        "steps"
+      ]
+    ],
+    [
+      [
+        "field",
+        0,
+        "geometry"
+      ],
+      [
+        "flow",
+        1,
+        "field"
+      ]
+    ],
+    [
+      [
+        "birth",
+        0,
+        "geometry"
+      ],
+      [
+        "flow",
+        0,
+        "particles"
+      ]
+    ],
+    [
+      [
+        "flow",
+        0,
+        "geometry"
+      ],
+      [
+        "solve",
+        0,
+        "particles"
+      ]
+    ],
+    [
+      [
+        "solve",
+        0,
+        "geometry"
+      ],
+      [
+        "step",
+        0,
+        "input"
+      ]
+    ],
+    [
+      [
+        "loop",
+        1,
+        "history"
+      ],
+      [
+        "trail",
+        0,
+        "history"
+      ]
+    ],
+    [
+      [
+        "loop",
+        0,
+        "result"
+      ],
+      [
+        "trail",
+        1,
+        "particles"
+      ]
+    ],
+    [
+      [
+        "trail",
+        0,
+        "geometry"
+      ],
+      [
+        "ink",
+        0,
+        "geometry"
+      ]
+    ],
+    [
+      [
+        "ink",
+        0,
+        "svg"
+      ],
+      [
+        "out",
+        0,
+        "input"
+      ]
+    ]
+  ]
+}
