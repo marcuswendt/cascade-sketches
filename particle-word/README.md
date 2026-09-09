@@ -53,6 +53,19 @@ So the rasterising stays in `word-field`, where a sketch's knowledge of type bel
 - **`id` rather than an index.** A particle array reorders on every kill, so a trail joins its points by `id`. Joining by array position would draw a stroke from one particle to an unrelated one — a plausible tangle rather than an error.
 - **A spatial index inside the force that needs it.** Attraction without one is `particles × targets`: about seven million distance checks a frame here, and the first render did not finish inside two minutes. With a grid, 1.7 seconds.
 
+## This one needs a Cascade newer than the published package
+
+**Read this before `npm install`.** `cascade.pop.*` is not in `@field/cascade@0.4.0`, so unlike the other sketches here this one resolves Cascade from a local checkout (`file:../../cascade`) and **will not install from a fresh clone**. That is stated rather than hidden because a dependency that cannot resolve is a worse first experience than a sentence explaining why.
+
+It is deliberate rather than pending. The particle operators are hours old and their surface has already changed three times: the field arrived as an `image` input, became point attraction, then became a flow field with a level to hold. **Publishing an API at that stage would be promising something not yet true**, and Cascade is explicitly an instrument rather than a product — the freedom to hard-cut across every sketch in an afternoon is the point. So the sketch names the checkout until the operator set has stopped moving.
+
+To run it today, clone `cascade` beside `cascade-sketches` and build it:
+
+```bash
+git clone git@github.com:marcuswendt/cascade.git
+cd cascade && npm install && npm run build && node scripts/build-cli.mjs
+```
+
 ## Running it
 
 ```bash

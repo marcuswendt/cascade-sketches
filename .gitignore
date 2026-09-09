@@ -3,3 +3,9 @@ node_modules/
 renders/
 *.log
 .DS_Store
+
+# Render outputs. A sketch that writes into its own assets dirties the repo on
+# every cook, and the picture is reproducible from the graph — which is the
+# whole point of the graph being here.
+assets/images/
+**/assets/images/
