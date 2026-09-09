@@ -5,35 +5,85 @@
   },
   "nodes": [
     {
-      "id": "field",
-      "module": "project.field-columns",
+      "id": "ramp",
+      "module": "project.gradient-ramp",
       "source": "project",
       "position": [
-        80,
-        200
+        60,
+        240
       ],
       "props": {
         "size": [
           28,
           10
         ],
-        "hue_span": 0.2,
-        "slice_shift": 0.05,
-        "saturation": 0.5,
-        "value": [
-          0.02,
-          0.95
+        "colour_a": [
+          0.01,
+          0.05,
+          0.11,
+          1
         ],
-        "banding": 0.6,
+        "colour_b": [
+          0.98,
+          0.55,
+          0.22,
+          1
+        ],
+        "curve": 2.6,
+        "bands": 7
+      }
+    },
+    {
+      "id": "noise",
+      "module": "project.colour-noise",
+      "source": "project",
+      "position": [
+        300,
+        240
+      ],
+      "props": {
+        "amount": 0.14,
+        "per_slice": 0.26,
+        "scale": 2,
         "seed": 7
       }
+    },
+    {
+      "id": "hue",
+      "module": "project.hue-shift",
+      "source": "project",
+      "position": [
+        540,
+        240
+      ],
+      "props": {
+        "per_slice": 0.05,
+        "saturation": 1.4
+      },
+      "inputs": [
+        {
+          "name": "amount",
+          "defaultValue": 0.52,
+          "dataType": "float"
+        }
+      ]
+    },
+    {
+      "id": "mean",
+      "module": "project.image-hue",
+      "source": "project",
+      "position": [
+        780,
+        400
+      ],
+      "props": {}
     },
     {
       "id": "volume",
       "module": "project.volume-render",
       "source": "project",
       "position": [
-        420,
+        780,
         200
       ],
       "props": {
@@ -47,14 +97,60 @@
           0.62,
           0.14,
           1.9
-        ]
+        ],
+        "exposure": 0.75,
+        "density": 3.4,
+        "floor": 0.06,
+        "saturation": 1.5,
+        "gamma": 1.15,
+        "occlusion": 0.85
+      }
+    },
+    {
+      "id": "title",
+      "module": "project.text-layer",
+      "source": "project",
+      "position": [
+        1040,
+        200
+      ],
+      "props": {
+        "size": 0.13,
+        "tracking": 0.06,
+        "weight": "300",
+        "blend": "screen",
+        "opacity": 0.92
       }
     }
   ],
   "connections": [
     [
       [
-        "field",
+        "ramp",
+        0,
+        "image"
+      ],
+      [
+        "noise",
+        0,
+        "image"
+      ]
+    ],
+    [
+      [
+        "noise",
+        0,
+        "image"
+      ],
+      [
+        "hue",
+        0,
+        "image"
+      ]
+    ],
+    [
+      [
+        "hue",
         0,
         "image"
       ],
@@ -66,14 +162,38 @@
     ],
     [
       [
-        "field",
+        "hue",
         0,
-        "mean_hue"
+        "image"
+      ],
+      [
+        "mean",
+        0,
+        "image"
+      ]
+    ],
+    [
+      [
+        "mean",
+        0,
+        "hue"
       ],
       [
         "volume",
         0,
         "mean_hue"
+      ]
+    ],
+    [
+      [
+        "volume",
+        0,
+        "image"
+      ],
+      [
+        "title",
+        0,
+        "image"
       ]
     ]
   ]
