@@ -3,7 +3,7 @@
   "private": true,
   "type": "module",
   "devDependencies": {
-    "cascade": "npm:@field/cascade@^0.4.0",
+    "cascade": "npm:@field/cascade@^0.5.1",
     "typescript": "^6.0.0"
   },
   "scripts": {
